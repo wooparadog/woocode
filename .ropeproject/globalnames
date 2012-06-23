@@ -1,0 +1,9 @@
+€}q(Userver2]q(UappqUmainqeUserver]q(UMainPageqheUprivate_config]q(U
+MYSQL_MAINqU
+MYSQL_HOSTq	U
+MYSQL_USERq
+UMYSQL_PASSWDqU
+MYSQL_PORTqUCONNECTION_STRINGqeU
+model.repo]q(URepoqUcreate_new_repoqUuserqeUmodel._base]q(Uget_db_by_tableqUSQLSTOREqeU_url]q(UURL_HANDLERSqUaddHandlersqeU
+model.user]q(Unew_userqUUserqeUconfig]q(U
+REPO_PATHSqUDATABASE_CONNECTIONqUDATABASE_TABLESqUgit_appqUROOTq UTEMPLATE_LOOKERq!Urenderq"UUPLOAD_PATHq#UPORTq$UDATABASE_CONFIGq%eu.
