@@ -2,15 +2,28 @@
 # -*- coding: utf-8 -*-
 
 from _base import Model, McModel
+from config import SITE_LINK
 
 class User(McModel):
-    pass
+    @property
+    def link(self):
+        return SITE_LINK%self.name
 
-if __name__ == '__main__':
-    new_user = User()
-    new_user.name="wooparadog"
-    new_user.password='111'
-    new_user.save()
-    
+    @property
+    def repos(self):
+        from repo import Repo
+        return Repo.where(owner_id=self.id)
 
-    
+    @property
+    def n_repos(self):
+        return len(self.repos)
+
+
+def create_new_user(user, email, password, password2):
+    if password == password2:
+        new_user = User()
+        new_user.name = user
+        new_user.password = password
+        new_user.email = email
+        new_user.save()
+        return new_user

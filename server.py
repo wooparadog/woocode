@@ -14,15 +14,19 @@ import tornado.web
 
 from _url import URL_HANDLERS
 import url 
-from config import PORT, ROOT
+from config import PORT, ROOT, git_app
 
+URL_HANDLERS.append(
+        ('/.*\.git/.*', tornado.web.FallbackHandler, dict(fallback=git_app)),
+        )
 
 class MainPage(tornado.web.RequestHandler):
     def get(self):
         self.write('out')
 
 def main():
-    application = tornado.web.Application(URL_HANDLERS)
+    application = tornado.web.Application(URL_HANDLERS, debug=True)
+    print URL_HANDLERS
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(PORT)
     tornado.ioloop.IOLoop.instance().start()

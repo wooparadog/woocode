@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<h1>Hello World</h1>
+    <h2>
+        <a href="/repos/new">new</a>
+    </h2>
+    <ul>
+        % for repo in all_repos:
+        <li> <a href="${repo.link}">${repo.name}</a> </li>
+        % endfor
+    </ul>
+</body>
+</html>

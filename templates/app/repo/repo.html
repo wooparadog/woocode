@@ -1,0 +1,19 @@
+<%!
+from utils.template import static
+%>
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+    <link media="all" rel="stylesheet" href="${static('css/base.css')}" type="text/css" />
+</head>
+<body>
+    <h1>${repo.name} 
+        <span class="h_repo_owner">${repo.owner.name}</span> 
+    </h1>
+    <h2> clone: ${repo.clone_addr}</h2>
+    
+    ${repo.link} - ${repo.name} - ${repo.owner.name}
+</body>
+</html>
