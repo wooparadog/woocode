@@ -27,3 +27,6 @@ def create_new_user(user, email, password, password2):
         new_user.email = email
         new_user.save()
         return new_user
+
+if __name__ == '__main__':
+    create_new_user('wooparadog', 'guohaochuan@gmail.com', 'abc', 'abc')
