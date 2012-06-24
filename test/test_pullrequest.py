@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
 import _env
 import unittest
 from subprocess import check_call
@@ -8,23 +7,8 @@ from model.user import User, create_new_user
 from model.repo import Repo, create_new_repo
 from model.pull_request import PullRequest
 import random
-import tempfile
 from os.path import join
-from contextlib import contextmanager
-import shutil
-
-@contextmanager
-def chdir(dir):
-    cwd = os.getcwd()
-    os.chdir(dir)
-    yield
-    os.chdir(cwd)
-
-@contextmanager
-def mkdtemp():
-    tmpdir = tempfile.mkdtemp()
-    yield tmpdir
-    shutil.rmtree(tmpdir)
+from utils.utils import chdir, mkdtemp
 
 class TestPullRequest(unittest.TestCase):
     def setup_user(self):

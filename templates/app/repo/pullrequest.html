@@ -1,0 +1,25 @@
+<%!
+from pygments import highlight
+from pygments.lexers import DiffLexer
+from pygments.formatters import HtmlFormatter
+
+%>
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<style type="text/css">
+    ${HtmlFormatter().get_style_defs('.highlight')}
+</style>
+<body>
+	<h1>pull request</h1>
+    <h2>${request.from_repo.name} -> ${request.to_repo.name}</h2>
+    <form method="POST">
+        <input type="submit" value="Merge" />
+    </form>
+    by ${request.creator.name}
+    ${highlight(request.diff(), DiffLexer(), HtmlFormatter())|n}
+</body>
+</html>

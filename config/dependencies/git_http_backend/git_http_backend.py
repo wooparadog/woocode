@@ -50,6 +50,8 @@ mimetypes.add_type('application/x-git-packed-objects','.pack')
 __version__=(1,7,0,4) # the number has no significance for this code's functionality.
 # The number means "I was looking at sources of that version of Git while coding"
 
+HOOKS = []
+
 class BaseWSGIClass(object):
     bufsize = 65536
     gzip_response = False
@@ -615,6 +617,7 @@ class GitHTTPBackendSmartHTTP(GitHTTPBackendBase):
 
         if git_command == u'git-receive-pack':
             # updating refs manually after each push. Needed for pre-1.7.0.4 git clients using regular HTTP mode.
+            print repo_path
             subprocess.call(u'git --git-dir "%s" update-server-info' % repo_path, shell=True)
 
         headers = [('Content-type', 'application/x-%s-result' % git_command.encode('utf8'))]

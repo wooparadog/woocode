@@ -6,6 +6,7 @@ from subprocess import check_call
 from _base import Model, McModel
 from config import REPO_PATHS, SITE_LINK
 from user import User
+from utils.utils import chdir, mkdtemp
 
 class Repo(McModel):
     @property
@@ -25,17 +26,41 @@ class Repo(McModel):
         return self.link + '.git'
 
     @property
+    def fork_link(self):
+        return path.join(self.link, 'fork')
+
+    @property
+    def request_link(self):
+        return path.join(self.link, 'pullrequest')
+
+    @property
     def owner(self):
         return User.get(self.owner_id)
 
     def clone(self, user):
         clone = Repo()
         clone.owner_id = user.id
-        clone.name = '-'.join([self.name, 'forked'])
+        clone.name = '_'.join([self.name, 'forked'])
         clone.desc = self.desc
+        clone.from_repo_id = self.id
         check_call(('git clone --bare %s %s'%(self.repo_path, clone.repo_path)).split())
         clone.save()
         return clone
+
+    @property
+    def from_repo(self):
+        return self.from_repo_id and Repo.mc_get(self.from_repo_id)
+    
+    def create_pull_request(self, user=None, from_branch='master', to_branch='master'):
+        if self.from_repo:
+            if not user:
+                user = self.owner
+            from pull_request import create_new_pull_request
+            pull_request = create_new_pull_request(user, 
+                    self, self.from_repo, 
+                    from_branch=from_branch,
+                    to_branch=to_branch)
+            return pull_request
 
 def create_new_repo(user, name, desc):
     new_repo = Repo()
@@ -43,6 +68,13 @@ def create_new_repo(user, name, desc):
     new_repo.name = name
     new_repo.desc = desc
     check_call(('git init %s --bare'%new_repo.repo_path).split())
+    with mkdtemp() as temp:
+        check_call(['git','clone',new_repo.repo_path, temp])
+        with chdir(temp):
+            check_call(['touch','README'])
+            check_call(['git', 'add', '.'])
+            check_call(['git','commit','-m','first commit'])
+            check_call(['git','push','origin', 'master'])
     new_repo.save()
     return new_repo
 

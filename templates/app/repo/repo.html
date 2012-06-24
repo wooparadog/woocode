@@ -13,7 +13,14 @@ from utils.template import static
         <span class="h_repo_owner">${repo.owner.name}</span> 
     </h1>
     <h2> clone: ${repo.clone_addr}</h2>
-    
+    <form action="${repo.fork_link}" method="POST">
+        <input type="submit" value="fork" />
+    </form>
+    % if repo.from_repo:
+    <form action="${repo.request_link}" method="POST">
+        <input type="submit" value="Create Pull Request" />
+    </form>
+    % endif
     ${repo.link} - ${repo.name} - ${repo.owner.name}
 </body>
 </html>
