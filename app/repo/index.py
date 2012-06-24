@@ -81,7 +81,7 @@ class CreatePullRequest(baseHandler):
     def post(self, username, repo):
         repo = parse_url(username, repo)
         if repo:
-            pullrequest = repo.create_pull_request()
+            pullrequest = repo.create_pull_request(user=self.current_user)
             if pullrequest:
                 return self.redirect(pullrequest.link)
 

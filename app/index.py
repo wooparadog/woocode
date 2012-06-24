@@ -9,5 +9,7 @@ from model.user import User
 @addHandlers(r'^/')
 class Index(baseHandler):
     def get(self):
+        current_user = self.current_user
         all_repos = Repo.where()
-        self.render("/app/index.html",  all_repos=all_repos)
+        self.render("/app/index.html", current_user=current_user, 
+                all_repos=all_repos)

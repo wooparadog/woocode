@@ -52,6 +52,7 @@ class Repo(McModel):
         return self.from_repo_id and Repo.mc_get(self.from_repo_id)
     
     def create_pull_request(self, user=None, from_branch='master', to_branch='master'):
+        #TODO: verify user privileges
         if self.from_repo:
             if not user:
                 user = self.owner

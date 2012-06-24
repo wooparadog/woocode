@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
-_base.py
-Author: WooParadog
-Email:  Guohaochuan@gmail.com
 
-Created on
-2011-11-19
-'''
-
-from config import render
+from model.session import verify_user_session_by_user_id
+from config import render, SESSION_KEY
 import tornado.web
 
 class baseHandler(tornado.web.RequestHandler):
     render = render
+    
+    @property
+    def current_user(self):
+        session = self.get_cookie(SESSION_KEY)
+        if session:
+            user_id, secret = session.split(":")
+            user = verify_user_session_by_user_id(user_id, secret)
+            return user

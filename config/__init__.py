@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
-__init__.py
-Author: WooParadog
-Email:  Guohaochuan@gmail.com
-
-Created on
-2011-11-19
-'''
 
 import tornado.wsgi
 import mako.lookup
@@ -17,6 +9,11 @@ from os.path import abspath,dirname,join
 from private_config import CONNECTION_STRING
 import dependencies.git_http_backend.git_http_backend
 
+SESSION_KEY = "SS"
+
+REDIS_CONFIG = {
+        "unix_socket_path":"/tmp/redis.sock"
+        }
 
 OWN_SITE = ['account', 'repos']
 RESERVED_PATH = '|'.join(OWN_SITE)

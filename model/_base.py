@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import _env
-from config import DATABASE_CONFIG
+from config import DATABASE_CONFIG, REDIS_CONFIG
 from sqlbean.db.sqlstore import SqlStore
 from sqlbean.db.mc_connection import init_mc
 
@@ -18,3 +18,6 @@ from sqlbean.db import connection
 connection.get_db_by_table = get_db_by_table
 
 from sqlbean.shortcut import Model,McModel
+
+import redis
+redis = redis.Redis(**REDIS_CONFIG)

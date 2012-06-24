@@ -4,8 +4,9 @@
 from _url import addHandlers  
 from _base import baseHandler
 from model.repo import Repo, create_new_repo
-from model.user import User, create_new_user
-from config import RESERVED_PATH
+from model.user import User, create_new_user, login_user
+from config import RESERVED_PATH, SESSION_KEY
+
 
 
 @addHandlers(r'^/account/register')
@@ -30,4 +31,20 @@ class Index(baseHandler):
         user = User.get(name=username)
         if user:
             self.render("/app/account/index.html", user=user)
-        
+
+@addHandlers(r'^/account/login')
+class Index(baseHandler):
+    def get(self):
+        if not self.current_user:
+            self.render("/app/account/login.html")
+        else:
+            self.redirect('/')
+
+    def post(self):
+        username = self.get_argument("username", None)
+        password = self.get_argument("password", None)
+        cookie = login_user(username, password)
+        if cookie:
+            self.set_cookie(SESSION_KEY, cookie)
+            return self.redirect("/")
+        raise
