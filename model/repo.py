@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import logging
 import os.path as path
 from subprocess import check_call
 from _base import Model, McModel
+from cache import redis_cache
 from config import REPO_PATHS, SITE_LINK
 from user import User
 from utils.utils import chdir, mkdtemp
+from config.dependencies.PyGIT import Storage
 
 class Repo(McModel):
     @property
@@ -48,6 +51,17 @@ class Repo(McModel):
         return clone
 
     @property
+    def _storage(self):
+        if not hasattr(self, "_git_storage"):
+            self._git_storage = Storage(self.repo_path, logging)
+        return self._git_storage 
+
+    @redis_cache("ls_tree:{rev}")
+    def ls_tree(self, rev="HEAD"):
+        print "not cache"
+        return self._storage.ls_all_tree(rev=rev)
+
+    @property
     def from_repo(self):
         return self.from_repo_id and Repo.mc_get(self.from_repo_id)
     
@@ -80,13 +94,25 @@ def create_new_repo(user, name, desc):
     return new_repo
 
 if __name__ == '__main__':
-    from user import User
-    user = User.where(name='wooparadog')
-    if user:
-        user = user[0]
+    from user import User, create_new_user 
+    try:
+        user = create_new_user('wooparadog', 'guohaochuan@gmail.com','123','123')
+    except:
+        user = User.where(name='wooparadog')
+        if user:
+            user = user[0]
+
+    try:
         new_repo = create_new_repo(user, 'hello_world', 'null')
-        print new_repo.name
-        print new_repo.owner.name
-        print new_repo.link
-        print new_repo.clone(user)
-        print new_repo.abs_path
+    except:
+        new_repo = Repo.where(owner_id=user.id, name="hello_world")
+        if new_repo:
+            new_repo = new_repo[0]
+    print "!~"
+
+    print new_repo.name
+    print new_repo.owner.name
+    print new_repo.link
+    #print new_repo.clone(user)
+    print new_repo.abs_path
+    print new_repo.ls_tree()

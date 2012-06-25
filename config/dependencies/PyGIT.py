@@ -592,6 +592,27 @@ class Storage(object):
     def get_tags(self):
         return [ e.strip() for e in self.repo.tag("-l").splitlines() ]
 
+    def ls_all_tree(self, rev):
+        rev = rev and str(rev) or 'HEAD' # paranoia
+
+
+        tree = self.repo.ls_tree("-z", "-l", rev, "--full-tree", '-r').split('\0')
+
+        def split_ls_tree_line(l):
+            "split according to '<mode> <type> <sha> <size>\t<fname>'"
+
+            meta, fname = l.split('\t', 1)
+            _mode, _type, _sha, _size = meta.split()
+
+            if _size == '-':
+                _size = None
+            else:
+                _size = int(_size)
+
+            return _mode, _type, _sha, _size, self._fs_to_unicode(fname)
+
+        return [ split_ls_tree_line(e) for e in tree if e ]
+
     def ls_tree(self, rev, path=""):
         rev = rev and str(rev) or 'HEAD' # paranoia
 
@@ -984,6 +1005,8 @@ def main():
     print_data_usage()
 
     # perform typical trac operations:
+    rev = g.head()
+    print g.ls_all_tree(rev)
 
     if 1:
         print "--------------"
@@ -992,6 +1015,11 @@ def main():
             [last_rev] = g.history(rev, name, limit=1)
             s = g.get_obj_size(sha) if _type == "blob" else 0
             msg = g.read_commit(last_rev)
+            if _type == "blob":
+                pass
+                #print g.cat_file("blob",sha) 
+            else:
+                print list(g.ls_tree(rev, path="/"+name+'/'))
 
             print "%s %s %10d [%s]" % (_type, last_rev, s, name)
 

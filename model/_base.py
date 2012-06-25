@@ -21,3 +21,4 @@ from sqlbean.shortcut import Model,McModel
 
 import redis
 redis = redis.Redis(**REDIS_CONFIG)
+
